@@ -35,6 +35,7 @@
         <servlet-class>controller.WXServlet</servlet-class>
     </servlet>
 
+    <!-- 注意: 配置了对 controller.WXServlet 类进行 /zhang/* 拦截-->
     <servlet-mapping>
         <servlet-name>marketServer</servlet-name>
         <url-pattern>/zhang/*</url-pattern>
