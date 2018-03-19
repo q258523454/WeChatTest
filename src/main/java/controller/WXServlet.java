@@ -1,5 +1,4 @@
 package controller;
-// Created by ZhangJian on 18/3/19.
 
 import util.CheckUtil;
 
