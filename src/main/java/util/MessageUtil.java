@@ -204,7 +204,7 @@ public class MessageUtil {
         news.setPicUrl("http://9f797487.ngrok.io/images/test.png"); // 本地图片
         // 百度网上的图片
 //        news.setPicUrl("c8bf84f661b81382173af6e756&imgtype=0&src=http%3A%2F%2Fwww.citytalk.tw%2Fbbs%2Fdata%2Fattachment%2Fforum%2F201010%2F15%2F201757hhmpsvme3hmvez2n.jpg");
-        news.setUrl("http://www.cuiyongzhi.com");
+        news.setUrl("http://9f797487.ngrok.io");
         newsList.add(news);
 
         // 组装整个图文消息

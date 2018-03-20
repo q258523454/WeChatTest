@@ -9,9 +9,9 @@ package entity;
 
 public class baseMessage {
     private String ToUserName;      // 开发者微信号
-    private String FromUserName;    // 发送方帐号（一个OpenID）
+    private String FromUserName;    // 接收方帐号（收到的OpenID））
     private String CreateTime;      // 消息创建时间 （整型）
-    private String MsgType;         // text
+    private String MsgType;         // Message 类型
     private String MsgId;           // 消息id，64位整型
 
     public String getMsgId() {
