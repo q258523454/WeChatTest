@@ -131,13 +131,13 @@
         <!-- —————————————————— log4j  END —————————————————————————— -->
 
         <!-- system 添加本地 maven jar -->
-        <dependency>
-            <groupId>weixin4j</groupId>
-            <artifactId>weixin4j</artifactId>
-            <version>0.0.9</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/webapp/lib/weixin4j-0.0.9.jar</systemPath>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>weixin4j</groupId>-->
+            <!--<artifactId>weixin4j</artifactId>-->
+            <!--<version>0.0.9</version>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${project.basedir}/src/main/webapp/lib/weixin4j-0.0.9.jar</systemPath>-->
+        <!--</dependency>-->
 
 
     </dependencies>

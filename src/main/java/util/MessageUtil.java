@@ -5,6 +5,8 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+import entity.News;
+import entity.NewsMessage;
 import entity.TextMessage;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -13,10 +15,7 @@ import org.dom4j.io.SAXReader;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 消息转化工具类
@@ -33,7 +32,7 @@ public class MessageUtil {
     public static final String REQ_MESSAGE_TYPE_LINK = "link";          // 链接
     public static final String REQ_MESSAGE_TYPE_LOCATION = "location";  // 地理位置
     public static final String REQ_MESSAGE_TYPE_VOICE = "voice";        // 音频
-    public static final String REQ_MESSAGE_TYPE_EVENT = "event";        // 推送
+    public static final String REQ_MESSAGE_TYPE_EVENT = "event";        // 事件类型{subscribe(订阅):unsubscribe(取消订阅)}
     public static final String EVENT_TYPE_SUBSCRIBE = "subscribe";      // subscribe(订阅)
     public static final String EVENT_TYPE_UNSUBSCRIBE = "unsubscribe";  // unsubscribe(取消订阅)
     public static final String EVENT_TYPE_CLICK = "CLICK";              // CLICK(自己定义菜单点击事件)
@@ -165,32 +164,57 @@ public class MessageUtil {
 
     /**
      * 图文消息对象转换成xml
+     *
      * @param newsMessage 图文消息对象
      * @return xml
      */
-//    public String newsMessageToXml(NewsMessage newsMessage) {
-//
-//        xstream.alias("xml", newsMessage.getClass());//
-//        xstream.alias("item", new Article().getClass());//
-//        return xstream.toXML(newsMessage);//
-//    }
+    public static String newsMessageToXml(NewsMessage newsMessage) {
+        xstream.alias("xml", newsMessage.getClass());        // 将xml的根节点替换成<xml>  默认为NewsMessage的包名
+        xstream.alias("item", new News().getClass());     // 每条图文消息的(多条子消息:PictureNews)的包名替换为<item>标签
+        return xstream.toXML(newsMessage);
+    }
 
-    public static String menuText(){
+    public static String menuText() {
         StringBuffer sb = new StringBuffer();
-        sb.append("欢迎关注公众号，请选择:\n\n");
-        sb.append("1、A。\n");
-        sb.append("2、B。\n\n");
-        sb.append("3、主菜单。\n\n");
+        sb.append("欢迎关注公众号，请选择:\n");
+        sb.append("1、A\n");
+        sb.append("2、B\n");
+        sb.append("3、主菜单\n");
         return sb.toString();
     }
-    public static String initText(String toUSerName,String fromUserName,String content){
+
+    public static String initText(String toUSerName, String fromUserName, String MsgId, String content) {
         TextMessage text = new TextMessage();
         text.setFromUserName(toUSerName);
         text.setToUserName(fromUserName);
         text.setMsgType(MessageUtil.REQ_MESSAGE_TYPE_TEXT);
-        text.setCreateTime(new Date().getTime()+"");
+        text.setCreateTime(new Date().getTime() + "");
         text.setContent(content);
+        text.setMsgId(MsgId);
         return MessageUtil.textMsgToXml(text);
+    }
+
+    public static String initNewsMessage(String toUSerName, String fromUserName, String MsgId) {
+        NewsMessage newsMessage = new NewsMessage();
+        List<News> newsList = new ArrayList<News>();
+        // 组件一条图文
+        News news = new News();
+        news.setTitle("测试图文标题");
+        news.setDescription("测试图文描述");
+        news.setPicUrl("http://9f797487.ngrok.io/images/test.png"); // 本地图片
+        // 百度网上的图片
+//        news.setPicUrl("c8bf84f661b81382173af6e756&imgtype=0&src=http%3A%2F%2Fwww.citytalk.tw%2Fbbs%2Fdata%2Fattachment%2Fforum%2F201010%2F15%2F201757hhmpsvme3hmvez2n.jpg");
+        news.setUrl("http://www.cuiyongzhi.com");
+        newsList.add(news);
+
+        // 组装整个图文消息
+        newsMessage.setFromUserName(toUSerName);
+        newsMessage.setToUserName(fromUserName);
+        newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
+        newsMessage.setArticleCount(newsList.size());
+        newsMessage.setArticles(newsList);
+        newsMessage.setCreateTime(new Date().getTime() + "");
+        return MessageUtil.newsMessageToXml(newsMessage);
     }
 }
 

@@ -47,6 +47,8 @@ public class WXServlet extends HttpServlet {
             String MsgType = map.get("MsgType");
             String Content = map.get("Content");
             String MsgId = map.get("MsgId");
+            String MediaId = map.get("MediaId");
+
             if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_VOICE)) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 TextMessage message = new TextMessage();
@@ -54,28 +56,32 @@ public class WXServlet extends HttpServlet {
                 message.setToUserName(FromUserName);
                 message.setMsgType("text");
                 message.setCreateTime(simpleDateFormat.format(new Date()));
+                message.setMsgId(MsgId);
                 message.setContent("Hello World!");
                 str = MessageUtil.textMsgToXml(message);
             } else if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {//判断是否为文本消息类型
                 if (Content.equals("1")) {
-                    str = MessageUtil.initText(ToUserName, FromUserName, "A");
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId,"A");
                 } else if (Content.equals("2")) {
-                    str = MessageUtil.initText(ToUserName, FromUserName, "B");
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId,"B");
                 } else if (Content.equals("3")) {
-                    str = MessageUtil.initText(ToUserName, FromUserName, MessageUtil.menuText());
-                } else {
-                    str = MessageUtil.initText(ToUserName, FromUserName, "没让你选的就别瞎嘚瑟！！！");
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId,MessageUtil.menuText());
+                } else if(Content.equals("4")){
+                    str = MessageUtil.initNewsMessage(ToUserName, FromUserName,MsgId);
+                }else {
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId,"没让你选的就别瞎嘚瑟！！！");
                 }
             } else if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {    //判断是否为事件类型
                 String eventType = map.get("Event");
                 if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    str = MessageUtil.initText(ToUserName, FromUserName, MessageUtil.menuText());
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId, MessageUtil.menuText());
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         long endTime = System.currentTimeMillis();    //获取结束时间
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms");
         logger.info(("程序运行时间：" + (endTime - startTime) + "ms"));    //输出程序运行时间
         out.print(str);
         out.close();
