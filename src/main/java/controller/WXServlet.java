@@ -1,9 +1,11 @@
 package controller;
 
+import entity.AccessToken;
 import entity.TextMessage;
 import org.apache.log4j.Logger;
 import util.CheckUtil;
 import util.MessageUtil;
+import util.WeiChatUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ public class WXServlet extends HttpServlet {
 
     private Logger logger = Logger.getLogger(WXServlet.class);
 
+    // 接请求URL而不需要传递参数时，可使用Get请求, 需要传递参数的时候，就需要使用Post请求
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String signature = request.getParameter("signature");
         String timestamp = request.getParameter("timestamp");
@@ -68,8 +71,11 @@ public class WXServlet extends HttpServlet {
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId,MessageUtil.menuText());
                 } else if(Content.equals("4")){
                     str = MessageUtil.initNewsMessage(ToUserName, FromUserName,MsgId);
-                }else {
-                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId,"没让你选的就别瞎嘚瑟！！！");
+                } else if (Content.equals("5")) {
+                    AccessToken accessToken = WeiChatUtil.getAccessToken();
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "AccessToken:" + accessToken.getToken() + "\ntime:" + accessToken.getExpiresIn());
+                } else {
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "没让你选的就别瞎嘚瑟！！！");
                 }
             } else if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {    //判断是否为事件类型
                 String eventType = map.get("Event");
