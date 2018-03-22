@@ -42,7 +42,7 @@ public class WeiChatUtil {
         HttpEntity entity = response.getEntity();               // 从response中获取结果，类型为HttpEntity
         String result = "";
         if (entity != null) {
-            result = EntityUtils.toString(entity, "UTF-8");//HttpEntity转为字符串类型
+            result = EntityUtils.toString(entity, "UTF-8"); //HttpEntity转为字符串类型(Json格式)
         }
         return JSON.parseObject(result);
     }
@@ -79,4 +79,14 @@ public class WeiChatUtil {
         return token;
     }
 
+    // 测试: 获取Token
+    public static void main(String[] args) {
+        try {
+            AccessToken accessToken = WeiChatUtil.getAccessToken();
+            System.out.println("accessToken:" + accessToken.getToken());
+            System.out.println("time:" + accessToken.getExpiresIn());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
