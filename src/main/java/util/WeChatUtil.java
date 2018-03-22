@@ -14,6 +14,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by
@@ -22,12 +26,13 @@ import java.io.IOException;
  * @date :   2018-03-21
  */
 
-public class WeiChatUtil {
+public class WeChatUtil {
     // 可以直接访问url:  https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx2717b7180b4856e6&secret=fc73041ce88392e639b1c5b3480cc24a"
-    private static final String APPID = "wx2717b7180b4856e6";                   // 第三方用户唯一凭证
+    private static final String APPID = "wx2717b7180b4856e6";                   // 公众号的全局唯一接口调用凭据
     private static final String APPSECRET = "fc73041ce88392e639b1c5b3480cc24a"; // 第三方用户唯一凭证密钥，即appsecret
     // 访问格式
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";  // 请求接口地址
+
 
     /**
      * 编写Get请求的方法。但没有参数传递的时候，可以使用Get请求
@@ -79,12 +84,16 @@ public class WeiChatUtil {
         return token;
     }
 
+
     // 测试: 获取Token
     public static void main(String[] args) {
         try {
-            AccessToken accessToken = WeiChatUtil.getAccessToken();
+            AccessToken accessToken = WeChatUtil.getAccessToken();
             System.out.println("accessToken:" + accessToken.getToken());
             System.out.println("time:" + accessToken.getExpiresIn());
+            String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test2.jpg";
+            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "image");
+            System.out.println("mediaId:" + mediaId);
         } catch (Exception e) {
             e.printStackTrace();
         }

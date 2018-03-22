@@ -5,7 +5,7 @@ import entity.TextMessage;
 import org.apache.log4j.Logger;
 import util.CheckUtil;
 import util.MessageUtil;
-import util.WeiChatUtil;
+import util.WeChatUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,11 +41,18 @@ public class WXServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");         // 避免中文乱码
         PrintWriter out = response.getWriter();
         String str = "";
+        // 睡眠5秒
+//        try {
+//            Thread.currentThread().sleep(5000);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
         try {
             Map<String, String> map = MessageUtil.xmlToMap(request);
             // 取元素
-            String ToUserName = map.get("ToUserName");
-            String FromUserName = map.get("FromUserName");
+            String ToUserName = map.get("ToUserName");          // 开发者微信号
+            String FromUserName = map.get("FromUserName");      // 发送方(接收方)
             String CreateTime = map.get("CreateTime");
             String MsgType = map.get("MsgType");
             String Content = map.get("Content");
@@ -72,10 +79,12 @@ public class WXServlet extends HttpServlet {
                 } else if(Content.equals("4")){
                     str = MessageUtil.initNewsMessage(ToUserName, FromUserName,MsgId);
                 } else if (Content.equals("5")) {
-                    AccessToken accessToken = WeiChatUtil.getAccessToken();
+                    AccessToken accessToken = WeChatUtil.getAccessToken();
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "AccessToken:" + accessToken.getToken() + "\ntime:" + accessToken.getExpiresIn());
-                } else {
-                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "没让你选的就别瞎嘚瑟！！！");
+                } else if(Content.equals("6")){
+                    str = MessageUtil.initImageMessage(ToUserName, FromUserName, "7_wWx34ZOWl_lwmBmGaP7s8Q7hNITBBev9KVkv6TYK9l3FuEjuT4qwHjZwtNZRrH");
+                }else {
+                    str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "选项超出范围！");
                 }
             } else if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {    //判断是否为事件类型
                 String eventType = map.get("Event");

@@ -5,9 +5,7 @@ import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import entity.News;
-import entity.NewsMessage;
-import entity.TextMessage;
+import entity.*;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -163,15 +161,20 @@ public class MessageUtil {
 //    }
 
     /**
-     * 图文消息对象转换成xml
-     *
-     * @param newsMessage 图文消息对象
-     * @return xml
+     * 图文消息对象转换
      */
     public static String newsMessageToXml(NewsMessage newsMessage) {
         xstream.alias("xml", newsMessage.getClass());        // 将xml的根节点替换成<xml>  默认为NewsMessage的包名
         xstream.alias("item", new News().getClass());     // 每条图文消息的(多条子消息:PictureNews)的包名替换为<item>标签
         return xstream.toXML(newsMessage);
+    }
+
+    /**
+     * 图片消息对象转换
+     */
+    public static String imageMessageToXml(ImageMessage imageMessage) {
+        xstream.alias("xml", imageMessage.getClass());
+        return xstream.toXML(imageMessage);
     }
 
     public static String menuText() {
@@ -194,7 +197,7 @@ public class MessageUtil {
         return MessageUtil.textMsgToXml(text);
     }
 
-    public static String initNewsMessage(String toUSerName, String fromUserName, String MsgId) {
+    public static String initNewsMessage(String toUserName, String fromUserName, String MsgId) {
         NewsMessage newsMessage = new NewsMessage();
         List<News> newsList = new ArrayList<News>();
         // 组件一条图文
@@ -208,7 +211,7 @@ public class MessageUtil {
         newsList.add(news);
 
         // 组装整个图文消息
-        newsMessage.setFromUserName(toUSerName);
+        newsMessage.setFromUserName(toUserName); // toUserName <--> fromUserName
         newsMessage.setToUserName(fromUserName);
         newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
         newsMessage.setArticleCount(newsList.size());
@@ -216,5 +219,27 @@ public class MessageUtil {
         newsMessage.setCreateTime(new Date().getTime() + "");
         return MessageUtil.newsMessageToXml(newsMessage);
     }
+
+    /**
+     * @param toUserName
+     * @param fromUserName
+     * @param mediaId      图片media_Id
+     * @return
+     */
+    public static String initImageMessage(String toUserName, String fromUserName, String mediaId) {
+
+        Image image = new Image();
+        image.setMediaId(mediaId);
+
+        ImageMessage imageMessage = new ImageMessage();
+        imageMessage.setToUserName(fromUserName);
+        imageMessage.setFromUserName(toUserName);
+        imageMessage.setMsgType(MessageUtil.REQ_MESSAGE_TYPE_IMAGE);
+        imageMessage.setCreateTime(new Date().getTime() + "");
+        imageMessage.setImage(image);
+
+        return imageMessageToXml(imageMessage);
+    }
+
 }
 
