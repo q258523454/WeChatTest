@@ -176,6 +176,13 @@ public class MessageUtil {
         xstream.alias("xml", imageMessage.getClass());
         return xstream.toXML(imageMessage);
     }
+    /**
+     * 音乐消息对象转换
+     */
+    public static String musicMessageToXml(MusicMessage musicMessage) {
+        xstream.alias("xml", musicMessage.getClass());
+        return xstream.toXML(musicMessage);
+    }
 
     public static String menuText() {
         StringBuffer sb = new StringBuffer();
@@ -239,6 +246,24 @@ public class MessageUtil {
         imageMessage.setImage(image);
 
         return imageMessageToXml(imageMessage);
+    }
+
+    public static String initMusicMessage(String toUserName, String fromUserName, String mediaId) {
+        Music music = new Music();
+        music.setTitle("TestMusic");
+        music.setDescription("Description");
+        music.setMusicURL("http://96f6b26c.ngrok.io/files/music.mp3");
+        music.setThumbMediaId(mediaId);
+
+
+        MusicMessage musicMessage = new MusicMessage();
+        musicMessage.setFromUserName(toUserName);
+        musicMessage.setToUserName(fromUserName);
+        musicMessage.setMsgType(RESP_MESSAGE_TYPE_MUSIC);
+        musicMessage.setCreateTime(new Date().getTime() + "");
+        musicMessage.setMusic(music);
+
+        return musicMessageToXml(musicMessage);
     }
 
 }

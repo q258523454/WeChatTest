@@ -91,8 +91,10 @@ public class WeChatUtil {
             AccessToken accessToken = WeChatUtil.getAccessToken();
             System.out.println("accessToken:" + accessToken.getToken());
             System.out.println("time:" + accessToken.getExpiresIn());
-            String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test2.jpg";
-            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "image");
+//            String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test2.jpg";
+//            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "image");
+            String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test3.jpg";
+            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "thumb");
             System.out.println("mediaId:" + mediaId);
         } catch (Exception e) {
             e.printStackTrace();

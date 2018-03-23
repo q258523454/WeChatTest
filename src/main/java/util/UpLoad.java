@@ -48,7 +48,7 @@ public class UpLoad {
         conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + BOUNDARY);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("--");
+        sb.append("--");    // 必须多两道线
         sb.append(BOUNDARY);
         sb.append("\r\n");
         sb.append("Content-Disposition:form-data;name=\"file\";filename=\"" + file.getName() + "\"\r\n");
@@ -64,7 +64,7 @@ public class UpLoad {
         //文件正文部分
         DataInputStream in = new DataInputStream(new FileInputStream(file));
         int bytes = 0;
-        byte[] bufferOut = new byte[1024];
+        byte[] bufferOut = new byte[1024*1024*10]; // 10M
         while ((bytes = in.read(bufferOut)) != -1) {
             out.write(bufferOut, 0, bytes);
         }
@@ -98,10 +98,12 @@ public class UpLoad {
 
         JSONObject json = JSONObject.parseObject(result);
         System.out.println(json);
-        String mediaId = json.getString("media_id");
-//        if (!type.equals("image")) {
-//            mediaId = json.getString(type + "_media_id");
-//        }
+        String mediaId = "";
+        if (!type.equals("image")) {
+            mediaId = json.getString(type + "_media_id");
+        }else {
+            mediaId = json.getString("media_id");
+        }
         return mediaId;
     }
 

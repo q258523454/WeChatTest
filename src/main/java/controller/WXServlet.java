@@ -82,7 +82,9 @@ public class WXServlet extends HttpServlet {
                     AccessToken accessToken = WeChatUtil.getAccessToken();
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "AccessToken:" + accessToken.getToken() + "\ntime:" + accessToken.getExpiresIn());
                 } else if(Content.equals("6")){
-                    str = MessageUtil.initImageMessage(ToUserName, FromUserName, "7_wWx34ZOWl_lwmBmGaP7s8Q7hNITBBev9KVkv6TYK9l3FuEjuT4qwHjZwtNZRrH");
+                    str = MessageUtil.initImageMessage(ToUserName, FromUserName, "cFE2sdzTvJCeKXdiYYu31nO0dwyyfGtQyTwCskVOHZoGjSprMH77aCGmh4krdAYL");
+                }else if(Content.equals("7")){
+                    str = MessageUtil.initMusicMessage(ToUserName, FromUserName, "fK1DyhiZslykAqhNFms8GIBhnAOPa5wy6sr67DnAk9ONUfaPCrqgJWTtMpYJ0v4k");
                 }else {
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "选项超出范围！");
                 }
