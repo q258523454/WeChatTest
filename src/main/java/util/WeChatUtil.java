@@ -3,6 +3,10 @@ package util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import entity.AccessToken;
+import entity.menu.Button;
+import entity.menu.ClickButton;
+import entity.menu.Menu;
+import entity.menu.ViewButton;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -14,10 +18,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by
@@ -32,6 +32,7 @@ public class WeChatUtil {
     private static final String APPSECRET = "fc73041ce88392e639b1c5b3480cc24a"; // 第三方用户唯一凭证密钥，即appsecret
     // 访问格式
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";  // 请求接口地址
+    private static final String CREATE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";   // 菜单组装的请求接口地址
 
 
     /**
@@ -61,7 +62,7 @@ public class WeChatUtil {
      */
     public static JSONObject doPostStr(String url, String outStr) throws ClientProtocolException, IOException {
         HttpClient client = HttpClientBuilder.create().build();         // 获取DefaultHttpClient请求
-        HttpPost httpost = new HttpPost(url);                           // HttpPost将使用Get方式发送请求URL
+        HttpPost httpost = new HttpPost(url);                           // HttpPost将使用post方式发送请求URL
         httpost.setEntity(new StringEntity(outStr, "UTF-8"));   // 使用setEntity方法，将我们传进来的参数放入请求中
         HttpResponse response = client.execute(httpost);                // 使用HttpResponse接收client执行httpost的结果
         String result = EntityUtils.toString(response.getEntity(), "UTF-8");//HttpEntity转为字符串类型
@@ -82,6 +83,57 @@ public class WeChatUtil {
             token.setExpiresIn(jsonObject.getInteger("expires_in"));//取出access_token的有效期
         }
         return token;
+    }
+
+
+    // 组装菜单
+    public static Menu initMenu() {
+        Menu menu = new Menu();
+        ClickButton button11 = new ClickButton();
+        button11.setKey("11");
+        button11.setName("了解ZHANG");
+        button11.setType("click");
+
+        ClickButton button12 = new ClickButton();
+        button12.setKey("12");
+        button12.setName("加入ZHANG");
+        button12.setType("click");
+
+        ViewButton button21 = new ViewButton();
+        button21.setName("ZHANG官网");
+        button21.setType("view");
+        button21.setUrl("http://www.baidu.com");
+
+        ViewButton button22 = new ViewButton();
+        button22.setName("ZHANG新闻网");
+        button22.setType("view");
+        button22.setUrl("http://www.baidu.com");
+
+        ClickButton button31 = new ClickButton();
+        button31.setName("BAIDU");
+        button31.setType("click");
+        button31.setKey("31");
+
+        Button button1 = new Button();
+        button1.setName("ZHANG"); //将11/12两个button作为二级菜单封装第一个一级菜单
+        button1.setSub_button(new Button[]{button11, button12});
+
+        Button button2 = new Button();
+        button2.setName("相关网址"); //将21/22两个button作为二级菜单封装第二个二级菜单
+        button2.setSub_button(new Button[]{button21, button22});
+
+        menu.setButton(new Button[]{button1, button2, button31});// 将31Button直接作为一级菜单
+        return menu;
+    }
+
+    public static String createMenu(String token, String menu) throws ClientProtocolException, IOException {
+        String result = "";
+        String url = CREATE_MENU_URL.replace("ACCESS_TOKEN", token);
+        JSONObject jsonObject = doPostStr(url, menu);
+        if (jsonObject != null) {
+            result = jsonObject.getString("errcode");
+        }
+        return result;
     }
 
 
