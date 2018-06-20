@@ -23,7 +23,12 @@ public class MenuTest {
         System.out.println("Access_Token为:" + token.getToken());
         System.out.println("有效时间为：" + token.getExpiresIn());
         String menu = JSONObject.toJSONString(WeChatUtil.initMenu());
+        System.out.println(menu);
         String result = WeChatUtil.createMenu(token.getToken(), menu);
-        System.out.println(result);
+        if (result.equals("0")) {
+            System.out.println("创建成功!");
+        } else {
+            System.out.println("result=" + result);
+        }
     }
 }

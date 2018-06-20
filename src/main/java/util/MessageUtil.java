@@ -209,12 +209,12 @@ public class MessageUtil {
         List<News> newsList = new ArrayList<News>();
         // 组件一条图文
         News news = new News();
-        news.setTitle("测试图文标题");
+        news.setTitle("测试图文标题test");
         news.setDescription("测试图文描述");
-        news.setPicUrl("http://9f797487.ngrok.io/images/test.png"); // 本地图片
+        news.setPicUrl("http://1cf42d8a.ngrok.io/images/test.png"); // 本地图片
         // 百度网上的图片
 //        news.setPicUrl("c8bf84f661b81382173af6e756&imgtype=0&src=http%3A%2F%2Fwww.citytalk.tw%2Fbbs%2Fdata%2Fattachment%2Fforum%2F201010%2F15%2F201757hhmpsvme3hmvez2n.jpg");
-        news.setUrl("http://9f797487.ngrok.io");
+        news.setUrl("http://1cf42d8a.ngrok.io");
         newsList.add(news);
 
         // 组装整个图文消息

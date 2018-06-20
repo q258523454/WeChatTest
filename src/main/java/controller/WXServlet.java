@@ -37,6 +37,7 @@ public class WXServlet extends HttpServlet {
 
     // 超过5秒, 微信服务器不会处理
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 从微信服务器接受post, 微信服务器--->本地(用doPost接受)
         long startTime = System.currentTimeMillis();    //获取开始时间
         response.setCharacterEncoding("UTF-8");         // 避免中文乱码
         PrintWriter out = response.getWriter();
@@ -82,10 +83,13 @@ public class WXServlet extends HttpServlet {
                     AccessToken accessToken = WeChatUtil.getAccessToken();
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "AccessToken:" + accessToken.getToken() + "\ntime:" + accessToken.getExpiresIn());
                 } else if(Content.equals("6")){
-                    str = MessageUtil.initImageMessage(ToUserName, FromUserName, "cFE2sdzTvJCeKXdiYYu31nO0dwyyfGtQyTwCskVOHZoGjSprMH77aCGmh4krdAYL");
+                    // 自动回复临时素材, 新增素材(临时,永久)在 UpLoadImage.main() 执行
+                    str = MessageUtil.initImageMessage(ToUserName, FromUserName, "_vgZdlsWMmR3wTEIqyCFC8aNsJCvZ3np0fn_l3zuI3o");
                 }else if(Content.equals("7")){
+                    // 自动回复音乐
                     str = MessageUtil.initMusicMessage(ToUserName, FromUserName, "fK1DyhiZslykAqhNFms8GIBhnAOPa5wy6sr67DnAk9ONUfaPCrqgJWTtMpYJ0v4k");
                 }else {
+                    // 菜单的创建在 MenuTest 类执行 Main()
                     str = MessageUtil.initText(ToUserName, FromUserName, MsgId, "选项超出范围！");
                 }
             } else if (MsgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {    //判断是否为事件类型

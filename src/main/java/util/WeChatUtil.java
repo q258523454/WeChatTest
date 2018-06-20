@@ -14,6 +14,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -28,11 +29,11 @@ import java.io.IOException;
 
 public class WeChatUtil {
     // 可以直接访问url:  https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx2717b7180b4856e6&secret=fc73041ce88392e639b1c5b3480cc24a"
-    private static final String APPID = "wx2717b7180b4856e6";                   // 公众号的全局唯一接口调用凭据
-    private static final String APPSECRET = "fc73041ce88392e639b1c5b3480cc24a"; // 第三方用户唯一凭证密钥，即appsecret
+    private static final String APPID = "wx46f7532e4f7241ec";                   // 公众号的全局唯一接口调用凭据
+    private static final String APPSECRET = "1c34da9f47c89a615ce195b1aaef955a"; // 第三方用户唯一凭证密钥，即appsecret
     // 访问格式
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";  // 请求接口地址
-    private static final String CREATE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";   // 菜单组装的请求接口地址
+    private static final String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";   // 菜单组装的请求接口地址
 
 
     /**
@@ -62,13 +63,22 @@ public class WeChatUtil {
      */
     public static JSONObject doPostStr(String url, String outStr) throws ClientProtocolException, IOException {
         HttpClient client = HttpClientBuilder.create().build();         // 获取DefaultHttpClient请求
-        HttpPost httpost = new HttpPost(url);                           // HttpPost将使用post方式发送请求URL
-        httpost.setEntity(new StringEntity(outStr, "UTF-8"));   // 使用setEntity方法，将我们传进来的参数放入请求中
-        HttpResponse response = client.execute(httpost);                // 使用HttpResponse接收client执行httpost的结果
+        HttpPost httpPost = new HttpPost(url);                           // HttpPost将使用post方式发送请求URL
+        httpPost.setEntity(new StringEntity(outStr, "UTF-8"));   // 使用setEntity方法，将我们传进来的参数放入请求中
+        HttpResponse response = client.execute(httpPost);                // 使用HttpResponse接收client执行httpost的结果
         String result = EntityUtils.toString(response.getEntity(), "UTF-8");//HttpEntity转为字符串类型
         return JSON.parseObject(result);
     }
-
+//    public static JSONObject doPostStr(String url,String outStr) throws ClientProtocolException, IOException {
+//        DefaultHttpClient client = new DefaultHttpClient();//获取DefaultHttpClient请求
+//        HttpPost httpost = new HttpPost(url); //HttpPost将使用Get方式发送请求URL
+//        JSONObject jsonObject = null;
+//        httpost.setEntity(new StringEntity(outStr,"UTF-8"));//使用setEntity方法，将我们传进来的参数放入请求中
+//        HttpResponse response = client.execute(httpost);//使用HttpResponse接收client执行httpost的结果
+//        String result = EntityUtils.toString(response.getEntity(),"UTF-8");//HttpEntity转为字符串类型
+//        jsonObject = JSONObject.parseObject(result);//字符串类型转为JSON类型
+//        return jsonObject;
+//    }
     /**
      * 获取AccessToken
      *
@@ -144,9 +154,9 @@ public class WeChatUtil {
             System.out.println("accessToken:" + accessToken.getToken());
             System.out.println("time:" + accessToken.getExpiresIn());
 //            String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test2.jpg";
-//            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "image");
+//            String mediaId = UpLoadImage.uploadFile(path, accessToken.getToken(), "image");
             String path = "/Users/mac/Documents/JavaProjects_git/WeChatTest/src/main/webapp/images/test3.jpg";
-            String mediaId = UpLoad.uploadFile(path, accessToken.getToken(), "thumb");
+            String mediaId = UpLoadImage.uploadFile(UpLoadImage.TEMP_UPLOAD_MATERIAL_URL,path, accessToken.getToken(), "thumb");
             System.out.println("mediaId:" + mediaId);
         } catch (Exception e) {
             e.printStackTrace();
